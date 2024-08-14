@@ -1,0 +1,174 @@
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+    <div class="container px-4">
+        <a class="navbar-brand" href="#page-top">TAI</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+            aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span
+                class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" (click)="clickLogout()">Logout</a></li>
+                <li class="nav-item"><a class="nav-link" [routerLink]="['/login']">Login</a></li>
+                <li class="nav-item"><a class="nav-link" [routerLink]="['/tai/new']">Nuevo TAI</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="pt-3">
+
+    <figure class="text-center mt-5">
+        <blockquote class="blockquote">
+            <h1>Crear TAI</h1>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+            TAI
+        </figcaption>
+    </figure>
+    <form class="container" (ngSubmit)="onTaiSubmit()" #orderForm="ngForm">
+        <div class="row mb-5">
+            <fieldset class="form-group col">
+                <h3 class="control-label" for="name">Titulo</h3>
+                <input type="text" class="form-control" [(ngModel)]="tai.name" required name="name" />
+            </fieldset>
+            <div class="col-1"></div>
+            <fieldset class="form-group col">
+                <h3 class="control-label" for="name">Titulo Grupo</h3>
+                <input type="text" class="form-control" [(ngModel)]="tai.grupo" required name="group" />
+            </fieldset>
+        </div>
+    
+        <div class="row mb-3">
+            <fieldset class="form-group col">
+                <h5 class="control-label" for="firstName">Nombre de la PRIMERA CATEGORÍA</h5>
+                <input type="text" class="form-control" [(ngModel)]="tai.imagen1"
+                    placeholder="¿Cual va a ser el nombre del primer concepto?" required name="imagen1" />
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalImagen"
+                    (click)="concept.status = 'Imagen1'" [disabled]="tai.imagen1 == ''">
+                    Añadir imagen de CATEGORÍA
+                </button>
+            </fieldset>
+            <div class="col-1"></div>
+            <fieldset class="form-group col">
+                <h5 class="control-label" for="name">Nombre de la PRIMERA CUALIDAD</h5>
+                <input type="text" class="form-control" [(ngModel)]="tai.palabra1"
+                    placeholder="¿Cual va a ser la palabra asociada a lo positivo?" required name="palabra1" />
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalPalabra"
+                    (click)="concept.status = 'Palabra1'" [disabled]="tai.palabra1 == ''">
+                    Añadir palabra de CUALIDAD
+                </button>
+            </fieldset>
+        </div>
+    
+        <div class="row">
+            <fieldset class="form-group col">
+                <h5 class="control-label" for="firstName">Nombre de la SEGUNDA CATEGORÍA</h5>
+                <input type="text" class="form-control" [(ngModel)]="tai.imagen2"
+                    placeholder="¿Cual va a ser el nombre del segundo concepto?" required name="imagen2" />
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalImagen"
+                    (click)="concept.status = 'Imagen2'" [disabled]="tai.imagen2 == ''">
+                    Añadir imagen de CATEGORÍA
+                </button>
+            </fieldset>
+            <div class="col-1"></div>
+            <fieldset class="form-group col">
+                <h5 class="control-label" for="name">Nombre de la SEGUNDA CUALIDAD</h5>
+                <input type="text" class="form-control" [(ngModel)]="tai.palabra2"
+                    placeholder="¿Cual va a ser la palabra asociada a lo negativo?" required name="palabra2" />
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalPalabra"
+                    (click)="concept.status = 'Palabra2'" [disabled]="tai.palabra2 == ''">
+                    Añadir palabra de CUALIDAD
+                </button>
+            </fieldset>
+        </div>
+    
+    
+        <div class="row table-responsive mt-3">
+            <table class="table table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th>Elemento</th>
+                        <th>Asociado</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+    
+                    <tr *ngFor="let palabra of tai.concepts; let j = index">
+                        <td><i>{{palabra.name}}</i></td>
+                        <td *ngIf="palabra.status == 'Palabra1'"><i>{{tai.palabra1}}</i></td>
+                        <td *ngIf="palabra.status == 'Palabra2'"><i>{{tai.palabra2}}</i></td>
+                        <td *ngIf="palabra.status == 'Imagen1'"><i>{{tai.imagen1}}</i></td>
+                        <td *ngIf="palabra.status == 'Imagen2'"><i>{{tai.imagen2}}</i></td>
+                        <td>
+                            <button type="button" class="btn btn-danger" (click)="deleteConcept(j)">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+    
+                </tbody>
+            </table>
+        </div>
+    
+        <fieldset class="form-group ps-4 pt-3 col-sm-3">
+            <div class="col-sm-offset-2 col-sm-12">
+                <button type="submit" class="btn btn-primary" [disabled]="!orderForm.form.valid || !this.valid"> Enviar </button>
+            </div>
+        </fieldset>
+    </form>
+
+</div>
+
+
+<!-- Modal -->
+<form class="modal fade" id="modalPalabra" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    (ngSubmit)="onPalabraSubmit()" #preguntaForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title" id="exampleModalLabel">Añadir palabra</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body container">
+                <div class="row">
+                    <h3 class="ms-3">Palabra</h3>
+                </div>
+                <input type="text" class="modal-input form-control row m-3" [(ngModel)]="concept.name" required
+                    name="palabra" id="palabra" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal"
+                    [disabled]="!preguntaForm.form.valid">Añadir palabra</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- Modal -->
+<form class="modal fade" id="modalImagen" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    (ngSubmit)="upload()" #preguntaForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title" id="exampleModalLabel">Añadir imagen</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body container">
+                <div class="row">
+                    <h3 class="ms-3">Imagen</h3>
+                </div>
+                <input type="file" class="modal-input form-control row m-3"  accept=".jpg,.png,.jpeg,.jfif" (change)="onChange($event)">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal"
+                    >Añadir imagen</button>
+                    <!--
+                        [disabled]="!preguntaForm.form.valid"
+                    -->
+            </div>
+        </div>
+    </div>
+</form>

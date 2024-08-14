@@ -1,0 +1,22 @@
+export interface TaiResult {
+    id: number,
+    idResp: number,
+    idTai: number,
+    mb3: number,
+    mb4: number,
+    mb6: number,
+    mb7: number,
+    mb36: number,
+    mb47: number,
+    std3: number,
+    std4: number,
+    std6: number,
+    std7: number,
+    std36: number,
+    std47: number,
+    createdAt: Date,
+    diff74: number,
+    dscore36: number,
+    dscore47: number,
+    diff63: number
+}

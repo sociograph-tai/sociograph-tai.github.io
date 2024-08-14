@@ -1,0 +1,246 @@
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+    <div class="container px-4">
+        <a class="navbar-brand" href="#page-top">TAI</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+            aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span
+                class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" (click)="clickLogout()">Logout</a></li>
+                <li class="nav-item"><a class="nav-link" [routerLink]="['/login']">Login</a></li>
+                <li class="nav-item"><a class="nav-link" [routerLink]="['/tai/new']">Nuevo TAI</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-sm m-3">
+            <div class="list-group" *ngFor="let user of users; let i = index">
+                <div *ngIf="user.id == userAdd.id; then thenBlock else elseBlock"></div>
+                <ng-template #thenBlock>
+                    <div class="row list-group-item list-group-item-action active" (click)="userAdd=user">
+                        <div class="col">
+                            <p>id:{{user.id}} - {{user.email}}
+                        </div>
+                        <div class="col d-flex flex-row-reverse"><button (click)="deleteUser(user.id)">DELETE</button></div>
+                    </div>
+                </ng-template>
+                <ng-template #elseBlock>
+                    <div class="row list-group-item list-group-item-action" (click)="userAdd=user">
+                        <div class="col">
+                            <p>id:{{user.id}} - {{user.email}}
+                        </div>
+                        <div class="col d-flex flex-row-reverse"><button (click)="deleteUser(user.id)">DELETE</button></div>
+                    </div>
+                </ng-template>
+            </div>
+            <button class="btn btn-primary mt-3" (click)="userAdd=newUser">Limpiar</button>
+        </div>
+        <div class="col-sm m-3">
+            <form (ngSubmit)="onSubmit()" #userForm="ngForm">
+
+                <div class="row">
+                    <input placeholder="name" type="text" class="form-control" required [(ngModel)]="userAdd.name" name="name" />
+                </div>
+
+                <div class="row">
+                    <input placeholder="First Name" type="text" class="form-control" required [(ngModel)]="userAdd.firstName" name="firstName" />
+                </div>
+
+                <div class="row">
+                    <input placeholder="LastName" type="text" class="form-control" required [(ngModel)]="userAdd.lastName" name="lastName" />
+                </div>
+
+                <div class="row">
+                    <input type="email" class="form-control" placeholder = "Email"
+                        pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" required
+                        [(ngModel)]="userAdd.email" name="email" />
+                </div>
+
+                <div class="row">
+                    <input placeholder="Password" type="password" class="form-control" required [(ngModel)]="userAdd.password" name="password" />
+                </div>
+
+                <div class="row">
+                    <p>Enable:<input class="form-check-input ms-2" type="checkbox" id="enableEdit" [(ngModel)]="userAdd.enabled" name="enabled" />
+                </div>
+
+                <div class="row">
+                    <button type="submit" class="btn btn-primary" [disabled]="!userForm.form.valid">Enviar</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table table-borderless">
+            <thead>
+                <tr>
+                    <th scope="col">id</th>
+                    <th scope="col">Code</th>
+                    <th scope="col">Grupo</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Activar</th>
+                    <th scope="col">Grupo</th>
+                    <th scope="col">Seleccionar</th>
+                    <th scope="col">Clonar</th>
+                    <th scope="col">Eliminar</th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let tai of tais; let i = index">
+                <tr>
+                    <td>{{tai.id}}</td>
+                    <td>{{tai.code}}</td>
+                    <td>{{tai.grupo}}</td>
+                    <td>{{tai.name}}</td>
+                    <td>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" [checked]="tai.enable" (click)="sendEnable(tai)">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" [checked]="tai.groupEnable" (click)="sendEnableGroups(tai)">
+                        </div>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary" (click)="getResults(tai.id)">
+                            Resultados
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalClonar"
+                            (click)="idTai = tai.id">
+                            Clonar
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete"
+                            (click)="idTai = tai.id">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col">
+            <button type="button" class="btn btn-primary" [routerLink]="['/tai/new']">Nuevo Tai</button>
+        </div>
+        <div class="col">
+            <button type="button" class="btn btn-primary" [disabled]="this.resultados.length == 0" (click)="getCSV(this.tai, this.resultados)">
+                Descargar Resultados</button>
+        </div>
+        <div class="col">
+            <button type="button" class="btn btn-primary" [disabled]="this.tais.length == 0" (click)="downloadAllResults()">
+                Descargar todos los Resultados</button>
+        </div>
+    </div>
+    <!--<div class="row">
+        <p>b3 y b4 = {{tai.imagen1}} y {{tai.palabra1}} vs {{tai.imagen2}} y {{tai.palabra2}} : b6 y b7 = {{tai.imagen1}} y {{tai.palabra2}} vs {{tai.imagen2}} y {{tai.palabra1}}</p>
+    </div>-->
+    <div class="row">
+        <table class="table table-borderless">
+            <thead>
+                <tr>
+                    <th scope="col">idResp</th>
+                    <th scope="col">mb3</th>
+                    <th scope="col">mb4</th>
+                    <th scope="col">mb6</th>
+                    <th scope="col">mb7</th>
+                    <th scope="col">mb36</th>
+                    <th scope="col">mb47</th>
+                    <th scope="col">std3</th>
+                    <th scope="col">std4</th>
+                    <th scope="col">std6</th>
+                    <th scope="col">std7</th>
+                    <th scope="col">std36</th>
+                    <th scope="col">std47</th>
+                    <th scope="col">createdAt</th>
+                    <th scope="col">diff74</th>
+                    <th scope="col">diff63</th>
+                    <th scope="col">dscore47</th>
+                    <th scope="col">dscore36</th>
+                    <th scope="col">Accion</th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let resultado of resultados; let i = index">
+                <tr>
+                    <td>{{resultado.idResp}}</td>
+                    <td>{{resultado.mb3}}</td>
+                    <td>{{resultado.mb4}}</td>
+                    <td>{{resultado.mb6}}</td>
+                    <td>{{resultado.mb7}}</td>
+                    <td>{{resultado.mb36}}</td>
+                    <td>{{resultado.mb47}}</td>
+                    <td>{{resultado.std3}}</td>
+                    <td>{{resultado.std4}}</td>
+                    <td>{{resultado.std6}}</td>
+                    <td>{{resultado.std7}}</td>
+                    <td>{{resultado.std36}}</td>
+                    <td>{{resultado.std47}}</td>
+                    <td>{{resultado.createdAt}}</td>
+                    <td>{{resultado.diff74}}</td>
+                    <td>{{resultado.diff63}}</td>
+                    <td>{{resultado.dscore47}}</td>
+                    <td>{{resultado.dscore36}}</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" [disabled]="this.resultados.length == 0"
+                        [routerLink]='["/tai/" + this.tai.id + "/resultados/" + resultado.idResp]'>
+                        Ver</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<form class="modal fade" id="modalClonar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    #cloneForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title" id="exampleModalLabel">Clone TAI</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body container">
+                <p>Esta funcion creara una replieca de este Tai en el mismo grupo con el nombre deseado
+                </p>
+                <div class="row">
+                    <input placeholder="name" type="text" class="form-control" required [(ngModel)]="taiName" name="name" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-warning" data-bs-dismiss="modal" (click)="cloneTai()"
+                    [disabled]="!cloneForm.form.valid">Clonar</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- Modal -->
+<form class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    #deleteForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title" id="exampleModalLabel">Eliminar TAI</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body container">
+                <p>Los datos asociados al tai incluidos los rasultados de los usuarios que han realizado el test
+                    seran eliminados permenetemente de la base de datos, este borrado será irreversible.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-danger" data-bs-dismiss="modal" (click)="deleteTai()"
+                    [disabled]="!deleteForm.form.valid">ELIMINAR</button>
+            </div>
+        </div>
+    </div>
+</form>

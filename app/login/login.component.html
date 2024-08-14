@@ -1,0 +1,31 @@
+<div class="container">
+    <div class="row">
+        <div class="col-lg-7 mx-auto">
+            <div class="bg-white rounded-lg shadow-sm p-5">
+                <div class="container py-5">
+                    <div class="row row mb-4">
+                        <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+                            <div class="row text-center">
+                                <h1>Adminstración</h1>
+                            </div>
+                            <div  class="mt-3 row">
+                                <div class="col d-flex flex-row" >
+                                    <a id="logoutButton" class="btn btn-danger mt-auto" (click)="clickLogout()">Logout</a>
+                                </div>
+                            </div>
+                            <div class="mt-5 row">
+                                <input type="text" class="form-control" placeholder="Usuario" [ngModelOptions]="{standalone: true}" [(ngModel)]="auth.email" required>
+                            </div>
+                            <div class="mt-3 row">
+                                <input type="password" class="form-control" placeholder="Contraseña" [ngModelOptions]="{standalone: true}" [(ngModel)]="auth.password" required>
+                            </div>
+                            <div class="mt-3 row"> 
+                                <input type="submit"  class="btn btn-dark w-100" value="login" [disabled]="!loginForm.form.valid"> 
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,64 @@
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+  <div class="container px-4">
+    <a class="navbar-brand" href="#page-top">TAI</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+      aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span
+        class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" [routerLink]="['/inicio']">Inicio</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container">
+  <div class="row mt-5">
+    <div class="col-lg-7 mx-auto">
+      <div class="bg-white rounded-lg shadow-sm p-5">
+        <h2 class = "text-center">Selecione el TAI que desea realizar</h2>
+        <div class="container py-5">
+          <div *ngIf="inGroups; then thenBlock else elseBlock"></div>
+          <ng-template #thenBlock>
+            <div class="row row mb-4">
+              <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th scope="col">Título</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody *ngFor="let group of groups; let i = index">
+                  <tr>
+                    <td>{{group}}</td>
+                    <td><button id="editButton" class="btn btn-primary mb-2 btn-block" (click)="click(group)">Ir</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </ng-template>
+          <ng-template #elseBlock>
+            <button id="editButton" class="btn btn-primary mb-2 btn-block" (click)="inGroups = true">Atrás</button>
+            <div class="row row mb-4">
+              <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th scope="col">Test</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody *ngFor="let tai of tais; let i = index">
+                  <tr *ngIf="tai.enable && tai.grupo == group">
+                    <td>{{tai.name}}</td>
+                    <td><a id="editButton" class="btn btn-primary mb-2 btn-block" [routerLink]="['/tai/', tai.id, 'test']">Ir</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </ng-template>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
